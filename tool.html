@@ -3,8 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OfferForge - Build Your Sellable Offer in 15 Minutes</title>
+    <title>Clarity Protocol — OfferForge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-dark: #0a0e27;
+            --bg-darker: #050816;
+            --cyan: #00f0ff;
+            --magenta: #ff00ff;
+            --purple: #8b00ff;
+            --white: #e8f4f8;
+            --gray: #7a8b9a;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,247 +25,367 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--white);
             line-height: 1.6;
-            color: #1a1a1b;
-            background: #f6f7f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Animated Grid */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+            flex: 1;
         }
 
-        .hero {
-            background: linear-gradient(135deg, #0079d3 0%, #006cbf 100%);
-            color: white;
-            padding: 60px 40px;
+        /* Header */
+        .header {
             text-align: center;
-            border-radius: 12px;
+            margin-bottom: 60px;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.05);
+            height: 3px;
+            margin: 30px 0 15px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            height: 100%;
+            width: 12.5%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+        }
+
+        .step-indicator {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        .step-indicator span {
+            color: var(--cyan);
+        }
+
+        /* Form Card */
+        .form-card {
+            background: rgba(10, 14, 39, 0.7);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 20px;
+            padding: 60px;
             margin-bottom: 40px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 240, 255, 0.1);
         }
 
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 20px;
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--cyan), var(--magenta), var(--purple));
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
         }
 
-        .hero p {
-            font-size: 1.3rem;
-            opacity: 0.95;
-            margin-bottom: 30px;
+        .form-card:hover::before {
+            opacity: 0.2;
         }
 
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+        .question {
+            display: none;
         }
 
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #0079d3;
+        .question.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
         }
 
-        .form-group {
-            margin-bottom: 30px;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
             display: block;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #1a1a1b;
-            font-size: 1.1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: var(--cyan);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
 
         .hint {
-            display: block;
-            font-size: 0.9rem;
-            color: #6a6d6f;
-            margin-bottom: 10px;
-            font-style: italic;
+            font-size: 15px;
+            color: var(--gray);
+            margin-bottom: 30px;
+            line-height: 1.7;
         }
 
         input[type="text"],
         textarea,
         select {
             width: 100%;
-            padding: 14px;
-            border: 2px solid #edeff1;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.3s;
+            padding: 18px 20px;
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 10px;
+            color: var(--white);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 17px;
+            transition: all 0.3s;
         }
 
         input[type="text"]:focus,
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: #0079d3;
+            border-color: var(--cyan);
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
         }
 
         textarea {
-            min-height: 120px;
+            min-height: 140px;
             resize: vertical;
         }
 
-        .btn {
-            background: #0079d3;
-            color: white;
-            padding: 18px 40px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 700;
+        select {
             cursor: pointer;
-            transition: background 0.3s;
+        }
+
+        /* Button */
+        .btn {
             width: 100%;
-        }
-
-        .btn:hover {
-            background: #006cbf;
-        }
-
-        .btn:disabled {
-            background: #d3d6da;
-            cursor: not-allowed;
-        }
-
-        .progress {
-            background: #edeff1;
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 30px;
+            padding: 22px 40px;
+            background: linear-gradient(135deg, var(--cyan) 0%, var(--magenta) 100%);
+            border: none;
+            border-radius: 50px;
+            color: var(--bg-dark);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
             overflow: hidden;
         }
 
-        .progress-bar {
-            background: #0079d3;
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
             height: 100%;
-            transition: width 0.3s;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s;
         }
 
-        .step-indicator {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: #6a6d6f;
-            font-weight: 600;
+        .btn:hover::before {
+            left: 100%;
         }
 
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Result */
         #result {
             display: none;
             text-align: center;
         }
 
+        #result.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
         #result h2 {
-            color: #46d160;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #result p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            color: var(--gray);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, var(--magenta) 0%, var(--purple) 100%);
             margin-bottom: 20px;
         }
 
-        .download-btn {
-            background: #46d160;
-            margin-bottom: 20px;
-        }
-
-        .download-btn:hover {
-            background: #3ab04d;
-        }
-
-        .footer {
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 30px 20px;
             text-align: center;
-            padding: 40px 20px;
-            color: #6a6d6f;
-            font-size: 0.9rem;
+            font-size: 11px;
+            color: var(--gray);
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        @media (max-width: 600px) {
-            .hero h1 {
-                font-size: 2rem;
+        footer a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--magenta);
+        }
+
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 40px 30px;
             }
-            .hero p {
-                font-size: 1.1rem;
+
+            label {
+                font-size: 22px;
             }
-            .card {
-                padding: 25px;
+
+            .btn {
+                padding: 20px 30px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="hero">
-        <h1>Stop Tweaking. Start Selling.</h1>
-        <p>Turn your skills into a clear, sellable offer in 15 minutes</p>
-    </div>
-
     <div class="container">
-        <div class="card">
-            <div class="step-indicator">Question <span id="current-step">1</span> of 8</div>
-            <div class="progress">
-                <div class="progress-bar" id="progress-bar" style="width: 12.5%;"></div>
+        <div class="header">
+            <div class="logo">OFFERFORGE</div>
+            <div class="step-indicator">Input <span id="current-step">1</span> of 8</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
             </div>
+        </div>
 
+        <div class="form-card">
             <form id="offer-form">
                 <!-- Question 1 -->
-                <div class="form-group question" data-step="1">
-                    <label for="expertise">What skill or expertise do you have?</label>
-                    <span class="hint">Be specific. "Marketing" is too broad. "Email marketing for e-commerce stores" is better.</span>
-                    <input type="text" id="expertise" required placeholder="e.g., Email marketing for e-commerce stores">
+                <div class="question active" data-step="1">
+                    <label for="expertise">Core Expertise Parameter</label>
+                    <p class="hint">Define your primary skill domain with precision. Avoid broad categories.</p>
+                    <input type="text" id="expertise" required placeholder="Email marketing for e-commerce stores">
                 </div>
 
                 <!-- Question 2 -->
-                <div class="form-group question" data-step="2" style="display: none;">
-                    <label for="target-customer">Who is your ideal customer?</label>
-                    <span class="hint">Not "everyone who needs X". Pick ONE specific type of person or business.</span>
-                    <input type="text" id="target-customer" required placeholder="e.g., Online store owners doing $50K-$500K/year">
+                <div class="question" data-step="2">
+                    <label for="target-customer">Target Entity Profile</label>
+                    <p class="hint">Specify exact buyer archetype. Single segment only.</p>
+                    <input type="text" id="target-customer" required placeholder="Online store owners, $50K-$500K annual revenue">
                 </div>
 
                 <!-- Question 3 -->
-                <div class="form-group question" data-step="3" style="display: none;">
-                    <label for="problem">What specific problem do they struggle with?</label>
-                    <span class="hint">What keeps them up at night? What costs them money or time?</span>
-                    <textarea id="problem" required placeholder="e.g., They send random promotional emails with no strategy and get poor open rates and almost no sales from email"></textarea>
+                <div class="question" data-step="3">
+                    <label for="problem">Critical Problem Statement</label>
+                    <p class="hint">Identify the high-cost pain point you eliminate.</p>
+                    <textarea id="problem" required placeholder="Random email broadcasts with no strategy, poor open rates, minimal revenue"></textarea>
                 </div>
 
                 <!-- Question 4 -->
-                <div class="form-group question" data-step="4" style="display: none;">
-                    <label for="outcome">What concrete outcome will they get?</label>
-                    <span class="hint">Not "better results" or "growth". What EXACTLY changes?</span>
-                    <textarea id="outcome" required placeholder="e.g., A 90-day email sequence that nurtures new subscribers and drives consistent weekly sales"></textarea>
+                <div class="question" data-step="4">
+                    <label for="outcome">Guaranteed Outcome</label>
+                    <p class="hint">State exact deliverable result. No vague promises.</p>
+                    <textarea id="outcome" required placeholder="90-day automated email sequence driving consistent weekly sales"></textarea>
                 </div>
 
                 <!-- Question 5 -->
-                <div class="form-group question" data-step="5" style="display: none;">
-                    <label for="deliverable">What format will you deliver this in?</label>
-                    <span class="hint">Choose what's easiest for you to deliver and valuable for them to receive.</span>
+                <div class="question" data-step="5">
+                    <label for="deliverable">Delivery Mechanism</label>
+                    <p class="hint">Select optimal delivery protocol.</p>
                     <select id="deliverable" required>
-                        <option value="">Select a format...</option>
-                        <option value="Done-for-you service">Done-for-you service (I do it for them)</option>
-                        <option value="Template/Toolkit">Template/Toolkit (they implement it)</option>
-                        <option value="1-on-1 consulting sessions">1-on-1 consulting sessions</option>
-                        <option value="Group program/workshop">Group program/workshop</option>
-                        <option value="Audit + recommendations">Audit + recommendations</option>
-                        <option value="Custom solution">Custom (specify below)</option>
+                        <option value="">Select format...</option>
+                        <option value="Done-for-you service">Done-for-you execution</option>
+                        <option value="Template/Toolkit">Template system</option>
+                        <option value="1-on-1 consulting sessions">Direct consultation</option>
+                        <option value="Group program/workshop">Group acceleration</option>
+                        <option value="Audit + recommendations">Strategic audit</option>
+                        <option value="Custom solution">Custom protocol</option>
                     </select>
-                    <input type="text" id="deliverable-custom" placeholder="Specify your custom deliverable format" style="margin-top: 10px; display: none;">
+                    <input type="text" id="deliverable-custom" placeholder="Specify custom delivery mechanism" style="margin-top: 20px; display: none;">
                 </div>
 
                 <!-- Question 6 -->
-                <div class="form-group question" data-step="6" style="display: none;">
-                    <label for="timeline">How long will it take to deliver?</label>
-                    <span class="hint">Be realistic. Faster isn't always better if you can't deliver quality.</span>
+                <div class="question" data-step="6">
+                    <label for="timeline">Execution Timeline</label>
+                    <p class="hint">Set realistic completion parameters.</p>
                     <select id="timeline" required>
                         <option value="">Select timeline...</option>
                         <option value="24-48 hours">24-48 hours</option>
-                        <option value="1 week">1 week</option>
-                        <option value="2 weeks">2 weeks</option>
+                        <option value="1 week">7 days</option>
+                        <option value="2 weeks">14 days</option>
                         <option value="30 days">30 days</option>
                         <option value="60 days">60 days</option>
                         <option value="90 days">90 days</option>
@@ -260,42 +393,42 @@
                 </div>
 
                 <!-- Question 7 -->
-                <div class="form-group question" data-step="7" style="display: none;">
-                    <label for="differentiator">What makes your approach different?</label>
-                    <span class="hint">Why choose you over generic competitors? What's your unique angle or method?</span>
-                    <textarea id="differentiator" required placeholder="e.g., I focus only on e-commerce and use behavior-triggered sequences instead of batch-and-blast"></textarea>
+                <div class="question" data-step="7">
+                    <label for="differentiator">Competitive Advantage</label>
+                    <p class="hint">Define unique methodology or positioning factor.</p>
+                    <textarea id="differentiator" required placeholder="E-commerce focus, behavior-triggered automation, zero batch-and-blast"></textarea>
                 </div>
 
                 <!-- Question 8 -->
-                <div class="form-group question" data-step="8" style="display: none;">
-                    <label for="price-range">What price range feels right for this offer?</label>
-                    <span class="hint">Consider: time required, expertise level, outcome value. Don't undersell.</span>
+                <div class="question" data-step="8">
+                    <label for="price-range">Value Exchange Range</label>
+                    <p class="hint">Set pricing tier aligned with delivered transformation.</p>
                     <select id="price-range" required>
                         <option value="">Select range...</option>
-                        <option value="$99-$299">$99-$299 (Quick win, template, or audit)</option>
-                        <option value="$300-$999">$300-$999 (Done-with-you or focused service)</option>
-                        <option value="$1,000-$2,499">$1,000-$2,499 (Done-for-you or deep consulting)</option>
-                        <option value="$2,500-$5,000">$2,500-$5,000 (Premium service or transformation)</option>
-                        <option value="$5,000+">$5,000+ (High-touch or ongoing retainer)</option>
+                        <option value="$99-$299">$99-$299 (Tactical)</option>
+                        <option value="$300-$999">$300-$999 (Strategic)</option>
+                        <option value="$1,000-$2,499">$1,000-$2,499 (Premium)</option>
+                        <option value="$2,500-$5,000">$2,500-$5,000 (Elite)</option>
+                        <option value="$5,000+">$5,000+ (Enterprise)</option>
                     </select>
                 </div>
 
-                <button type="button" class="btn" id="next-btn" onclick="nextQuestion()">Next Question</button>
-                <button type="button" class="btn" id="generate-btn" onclick="generateOffer()" style="display: none;">Generate My Offer</button>
+                <button type="button" class="btn" id="next-btn" onclick="nextQuestion()">Next Input →</button>
+                <button type="button" class="btn" id="generate-btn" onclick="generateOffer()" style="display: none;">Execute Protocol</button>
             </form>
 
             <div id="result">
-                <h2>✓ Your Offer is Ready!</h2>
-                <p style="margin-bottom: 30px; font-size: 1.1rem; color: #6a6d6f;">Download your one-page offer document below.</p>
-                <button class="btn download-btn" onclick="downloadPDF()">Download Offer Document (PDF)</button>
-                <button class="btn" onclick="resetForm()">Create Another Offer</button>
+                <h2>✓ Complete</h2>
+                <p>Offer document generated. Ready for deployment.</p>
+                <button class="btn btn-download" onclick="downloadPDF()">Download Document</button>
+                <button class="btn" onclick="resetForm()">Reset Protocol</button>
             </div>
         </div>
     </div>
 
-    <div class="footer">
-        <p>Built with OfferForge | Simple offers that sell</p>
-    </div>
+    <footer>
+        <a href="index.html">← Return to Base</a> · OfferForge v2.0 © 2026
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
@@ -303,16 +436,10 @@
         const totalSteps = 8;
         const formData = {};
 
-        // Handle custom deliverable visibility
         document.getElementById('deliverable').addEventListener('change', function() {
             const customInput = document.getElementById('deliverable-custom');
-            if (this.value === 'Custom solution') {
-                customInput.style.display = 'block';
-                customInput.required = true;
-            } else {
-                customInput.style.display = 'none';
-                customInput.required = false;
-            }
+            customInput.style.display = this.value === 'Custom solution' ? 'block' : 'none';
+            customInput.required = this.value === 'Custom solution';
         });
 
         function nextQuestion() {
@@ -324,10 +451,8 @@
                 return;
             }
 
-            // Save current answer
             formData[input.id] = input.value;
             
-            // If custom deliverable, save that too
             if (input.id === 'deliverable' && input.value === 'Custom solution') {
                 const customInput = document.getElementById('deliverable-custom');
                 if (!customInput.value.trim()) {
@@ -337,27 +462,20 @@
                 formData['deliverable-custom'] = customInput.value;
             }
 
-            // Hide current question
-            currentQuestion.style.display = 'none';
-
-            // Move to next
+            currentQuestion.classList.remove('active');
             currentStep++;
 
             if (currentStep <= totalSteps) {
-                // Show next question
                 const nextQuestion = document.querySelector(`[data-step="${currentStep}"]`);
-                nextQuestion.style.display = 'block';
+                nextQuestion.classList.add('active');
                 
-                // Update progress
                 const progress = (currentStep / totalSteps) * 100;
                 document.getElementById('progress-bar').style.width = progress + '%';
                 document.getElementById('current-step').textContent = currentStep;
 
-                // Focus the input
                 const nextInput = nextQuestion.querySelector('input, textarea, select');
-                nextInput.focus();
+                setTimeout(() => nextInput.focus(), 100);
 
-                // Show generate button on last question
                 if (currentStep === totalSteps) {
                     document.getElementById('next-btn').style.display = 'none';
                     document.getElementById('generate-btn').style.display = 'block';
@@ -367,7 +485,7 @@
 
         function generateOffer() {
             const lastQuestion = document.querySelector(`[data-step="${totalSteps}"]`);
-            const lastInput = lastQuestion.querySelector('input, textarea, select');
+            const lastInput = lastQuestion.querySelector('select');
             
             if (!lastInput.value.trim()) {
                 lastInput.focus();
@@ -376,11 +494,10 @@
 
             formData[lastInput.id] = lastInput.value;
 
-            // Hide form, show result
             document.getElementById('offer-form').style.display = 'none';
-            document.querySelector('.progress').style.display = 'none';
             document.querySelector('.step-indicator').style.display = 'none';
-            document.getElementById('result').style.display = 'block';
+            document.querySelector('.progress-container').style.display = 'none';
+            document.getElementById('result').classList.add('active');
         }
 
         function downloadPDF() {
@@ -391,144 +508,77 @@
                 ? formData['deliverable-custom'] 
                 : formData['deliverable'];
 
-            // Title
-            doc.setFontSize(24);
+            // Header
+            doc.setFontSize(28);
             doc.setFont(undefined, 'bold');
-            doc.text('Your Offer', 20, 25);
+            doc.text('OFFER PROTOCOL', 20, 25);
 
-            doc.setFontSize(10);
+            doc.setFontSize(9);
             doc.setFont(undefined, 'normal');
-            doc.setTextColor(100, 100, 100);
-            doc.text('Generated by OfferForge', 20, 32);
-
-            // Reset color
-            doc.setTextColor(0, 0, 0);
+            doc.setTextColor(100);
+            doc.text('Generated by OfferForge v2.0', 20, 32);
+            doc.setTextColor(0);
 
             let y = 50;
+            const lineHeight = 6;
+            const sectionGap = 12;
 
-            // Target Customer
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('Target Customer', 20, y);
-            y += 8;
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            const targetLines = doc.splitTextToSize(formData['target-customer'], 170);
-            doc.text(targetLines, 20, y);
-            y += (targetLines.length * 6) + 10;
+            const addSection = (title, content) => {
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'bold');
+                doc.text(title.toUpperCase(), 20, y);
+                y += 7;
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                const lines = doc.splitTextToSize(content, 170);
+                doc.text(lines, 20, y);
+                y += (lines.length * lineHeight) + sectionGap;
 
-            // Problem Solved
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('Problem Solved', 20, y);
-            y += 8;
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            const problemLines = doc.splitTextToSize(formData['problem'], 170);
-            doc.text(problemLines, 20, y);
-            y += (problemLines.length * 6) + 10;
+                if (y > 250) {
+                    doc.addPage();
+                    y = 20;
+                }
+            };
 
-            // Outcome Promise
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('Outcome Promise', 20, y);
-            y += 8;
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            const outcomeLines = doc.splitTextToSize(formData['outcome'], 170);
-            doc.text(outcomeLines, 20, y);
-            y += (outcomeLines.length * 6) + 10;
+            addSection('Target Entity', formData['target-customer']);
+            addSection('Critical Problem', formData['problem']);
+            addSection('Guaranteed Outcome', formData['outcome']);
+            addSection('Delivery Mechanism', deliverableText);
+            addSection('Execution Timeline', formData['timeline']);
+            addSection('Competitive Advantage', formData['differentiator']);
+            addSection('Value Exchange', formData['price-range']);
+            addSection('Core Expertise', formData['expertise']);
 
-            // Check if we need a new page
-            if (y > 240) {
-                doc.addPage();
-                y = 20;
-            }
-
-            // Deliverable Format
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('Deliverable Format', 20, y);
-            y += 8;
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            doc.text(deliverableText, 20, y);
-            y += 12;
-
-            // Timeline
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('Timeline', 20, y);
-            y += 8;
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            doc.text(formData['timeline'], 20, y);
-            y += 12;
-
-            // Differentiator
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('What Makes This Different', 20, y);
-            y += 8;
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            const diffLines = doc.splitTextToSize(formData['differentiator'], 170);
-            doc.text(diffLines, 20, y);
-            y += (diffLines.length * 6) + 10;
-
-            // Price Range
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('Price Range', 20, y);
-            y += 8;
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            doc.text(formData['price-range'], 20, y);
-            y += 12;
-
-            // Check if we need a new page
-            if (y > 240) {
-                doc.addPage();
-                y = 20;
-            }
-
-            // Expertise (moved to end)
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('Your Expertise', 20, y);
-            y += 8;
-            doc.setFontSize(11);
-            doc.setFont(undefined, 'normal');
-            doc.text(formData['expertise'], 20, y);
-
-            // Footer
             doc.setFontSize(8);
-            doc.setTextColor(150, 150, 150);
-            doc.text('Created with OfferForge - offerforge.here.now', 20, 285);
+            doc.setTextColor(150);
+            doc.text('OfferForge v2.0 — Clarity Systems Division', 20, 285);
 
-            doc.save('my-offer.pdf');
+            doc.save('offer-protocol.pdf');
         }
 
         function resetForm() {
             currentStep = 1;
             document.getElementById('offer-form').reset();
             document.getElementById('offer-form').style.display = 'block';
-            document.querySelector('.progress').style.display = 'block';
             document.querySelector('.step-indicator').style.display = 'block';
-            document.getElementById('result').style.display = 'none';
+            document.querySelector('.progress-container').style.display = 'block';
+            document.getElementById('result').classList.remove('active');
             document.getElementById('next-btn').style.display = 'block';
             document.getElementById('generate-btn').style.display = 'none';
             
-            // Hide all questions except first
             document.querySelectorAll('.question').forEach((q, i) => {
-                q.style.display = i === 0 ? 'block' : 'none';
+                if (i === 0) {
+                    q.classList.add('active');
+                } else {
+                    q.classList.remove('active');
+                }
             });
 
             document.getElementById('progress-bar').style.width = '12.5%';
             document.getElementById('current-step').textContent = '1';
         }
 
-        // Allow Enter key to advance
         document.getElementById('offer-form').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
                 e.preventDefault();
